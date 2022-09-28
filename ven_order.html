@@ -243,7 +243,7 @@ https://templatemo.com/tm-559-zay-shop
                           <option value="กลางคืน" >กลางคืน</option>
                         </select>
                     </div>
-                    <div class="col-2 form-check-inline">
+                    <div class="col-3 form-check-inline">
                         <!-- <label for="recipient-name" class="col-form-label">ชื่อเวร:</label> -->
                         <select class="form-select mt-1" id="ven_com_name" v-model="vcd.ven_com_name" >
                           <option v-for="svn in sel_ven_name" :value="svn"  >{{svn}}</option>
@@ -253,9 +253,9 @@ https://templatemo.com/tm-559-zay-shop
                         <!-- <label for="recipient-name" class="col-form-label">ค่าเวร:</label> -->
                         <input type="number" class="form-control mt-1" id="recipient-name" v-model="vcd.price">
                     </div>
-                    <div class="col-1 form-check-inline">
+                    <div class="col-1 form-check-inline" v-if="ven_com.act =='insert'">
                         <!-- <label for="recipient-name" class="col-form-label">#</label> -->
-                        <button @click.prevent="ven_p_d(index)" class="btn btn-danger" v-if="index != 0" >ลบ</button>
+                        <button @click.prevent="ven_p_d(index)"  class="btn btn-danger" v-if="index != 0" >ลบ</button>
                     </div>
                 </div>
                 <button @click.prevent="ven_p()" class="btn btn-success mt-2">เพิ่มหน้าที่</button>
