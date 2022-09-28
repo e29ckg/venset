@@ -7,7 +7,6 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header("Content-Type: application/json; charset=utf-8");
 
 include "../config_db.php";
-include "../config_prams.php";
 
 $data = json_decode(file_get_contents("php://input"));
 
@@ -75,7 +74,7 @@ try{
                 $query->execute();
 
             }else{
-                $ven_time = $_DN[$vcd->DN].':'.$vt[$vcd->u_role]; 
+                // $ven_time = $_DN[$vcd->DN].':'.$vt[$vcd->u_role]; 
                 $sql = "INSERT INTO ven_com(ven_com_num, ven_com_date, ven_month, ven_time, DN, u_role, ven_com_name, price, status) 
                                   VALUE(:ven_com_num, :ven_com_date, :ven_month, :ven_time, :DN, :u_role, :ven_com_name, :price, 1);";        
                 $query = $dbcon->prepare($sql);
