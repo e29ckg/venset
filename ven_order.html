@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>ven - Order</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <!-- <link rel="stylesheet" href="assets/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./node_modules/sweetalert2/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="assets/css/templatemo.css">
+    <!-- <link rel="stylesheet" href="assets/css/custom.css"> -->
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap"> -->
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="./dist/css/app.css">
+<style>
+    nav{
+        font-family: 'Prompt', sans-serif;
+    }
+</style>
+<!--
+    
+TemplateMo 559 Zay Shop
+
+https://templatemo.com/tm-559-zay-shop
+
+-->
+</head>
+
+<body>
+    <div id="venOrder" v-cloak>
+    <!-- Start Top Nav -->
+    <nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top">
+        <div class="container text-light">
+            <div class="w-100 d-flex justify-content-between">
+                <div>
+                    <i class="fa fa-envelope mx-2"></i>
+                    <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@company.com</a>
+                    <i class="fa fa-phone mx-2"></i>
+                    <a class="navbar-sm-brand text-light text-decoration-none" href="tel:010-020-0340">010-020-0340</a>
+                </div>
+                <div>
+                    <a class="text-light" href="https://fb.com/templatemo" target="_blank" rel="sponsored"><i class="fab fa-facebook-f fa-sm fa-fw me-2"></i></a>
+                    <a class="text-light" href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram fa-sm fa-fw me-2"></i></a>
+                    <a class="text-light" href="https://twitter.com/" target="_blank"><i class="fab fa-twitter fa-sm fa-fw me-2"></i></a>
+                    <a class="text-light" href="https://www.linkedin.com/" target="_blank"><i class="fab fa-linkedin fa-sm fa-fw"></i></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- Close Top Nav -->
+
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+
+            <a class="navbar-brand text-success logo h1 align-self-center" href="index.html">
+                Zay
+            </a>
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between" id="templatemo_main_nav">
+                <div class="flex-fill">
+                    <ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="ven_order.html">คำสั่ง</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="shop.html">Shop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.html">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+
+        </div>
+    </nav>
+    <!-- Close Header -->
+
+    <!-- Start Section -->
+    <section class="container py-5">
+        <div class="row pt-5 pb-3">
+            
+            <div class="col-xs-12">
+                   <div class="box">
+                       <div class="box-header">
+                           <h3 class="box-title"> </h3>
+                           <div class="box-tools pull-right">
+                            <button id="act-create" class="btn btn-danger btn-md mb-2" alt="act-create"  type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ref="show_modal">
+                                <i class="fa fa-pencil-square-o "></i> เพิ่มคำสั่ง
+                            </button>  
+                        </div>	
+                    </div>
+                    
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                          <div id="example1_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">				  
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="example1" class="table table-bordered table-striped dataTable" role="grid" >
+                                        <thead>
+                                            <tr role="row">										
+                                                <th class="text-center" >เดือน</th>
+                                                <th class="text-center" >เลขที่คำสั่ง</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>                  
+                                            <tr v-for="dt in datas">						                
+                                                <td>
+                                                    {{dt.ven_month}}                                                
+                                                </td>                                                        
+                                                <td>   
+                                                     <ol v-for="vc in dt.ven_com_num">
+                                                            คำสั่งที่ {{vc.ven_com_num}} ลงวันที่ {{vc.ven_com_date}}	
+                                                            <button class="btn btn-warning btn-md m-1 act-update" alt="act-update" @click.prevent="update(vc.ven_com_num,vc.ven_com_date,dt.ven_month)">
+                                                                    <i class="fa fa-pencil-square-o "></i> แก้ไข</button>  												
+                                                            <li v-for="v in vc.ven_com">
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" v-model="v.status" @click="set_st(v.id)">
+                                                                    <!-- {{v.id}}  -->
+                                                                    {{v.u_role}} -> {{v.DN}} -> {{v.ven_com_name}} -> {{v.ven_time}} -> {{v.price}}    
+                                                                    <button v-if="v.status_del" class="btn btn-danger btn-md" @click.prevent="delete_com_ven(v.id)">ลบ</button>    																
+                                                                    
+                                                                </div>
+                                                                
+                                                                <!-- <span class="label label-primary" v-if="v.status == true">ใช้งาน</span> -->
+                                                                <!-- <span class="label label-danger" v-else>ไม่ใช้งาน</span>	         -->
+                                                                <!-- <button class="btn btn-warning btn-md m-1 act-update" alt="act-update" @click.prevent="update(v.id)"> -->
+                                                                    <!-- <i class="fa fa-pencil-square-o "></i> แก้ไข</button>   -->
+                                                            </li>	
+                                                    </ol>												
+                                                    
+                                                </td>	
+                                                <td> 
+                                                    <!-- <button class="btn btn-warning btn-sm me-2" alt="act-update"><i class="fa fa-pencil-square-o "></i> แก้ไข</button> -->
+                                                    <a href="./ven_set.html" target="_blank" class="btn btn-danger btn-sm">จัดเวร</a></td>
+                                            </tr>							
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>		
+        </div>
+    </section>
+    <!-- End Section -->
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+    Launch static backdrop modal
+</button> -->
+  
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="reset_ven_com()"></button>
+        </div>
+        <div class="modal-body">
+            <form @submit="save_ven_com()">
+                <div class="row">
+                    <div class="mb-3 col-3">
+                      <label for="recipient-name" class="col-form-label">คำสั่งที่:</label>
+                      <input type="text" class="form-control" id="recipient-name" v-model="ven_com.ven_com_num" required>
+                    </div>
+                    <div class="mb-3 col-4">
+                      <label for="recipient-name" class="col-form-label">ลงวันที่:</label>
+                      <input type="date" class="form-control" id="recipient-name" v-model="ven_com.ven_com_date" required>
+                    </div>
+                    <div class="mb-3 col-4">
+                      <label for="recipient-name" class="col-form-label">อยู่เวรเดือน:</label>
+                      <select class="form-select mt-2" id="ven_month"  v-model="ven_com.ven_month" required>
+                        <option v-for="svm in sel_ven_month" :value="svm.ven_month">{{svm.name}}</option>
+                      </select>
+                    </div>
+                    
+               
+                </div>
+                <div class="row ">
+                    <div class="col-1 form-check-inline">
+                        <label for="recipient-name" class="col-form-label">#</label>
+                       
+                    </div>
+                    <div class="col-2 form-check-inline">
+                        <label for="recipient-name" class="col-form-label">ผู้อยู่:</label>
+                        
+                    </div>
+                    <div class=" col-2 form-check-inline">
+                        <label for="recipient-name" class="col-form-label">กลางวัน/กลางคืน:</label>
+                        
+                    </div>
+                    <div class="col-3 form-check-inline">
+                        <label for="recipient-name" class="col-form-label">ชื่อเวร:</label>
+                        
+                    </div>
+                    <div class="col-2 form-check-inline">
+                        <label for="recipient-name" class="col-form-label">ค่าเวร:</label>
+                        
+                    </div>
+                    <!-- <div class="col-1 form-check-inline">
+                        <label for="recipient-name" class="col-form-label">#</label>
+                        
+                    </div> -->
+                </div>
+                <div class="row" v-for="vcd,index in ven_com.ven_com_detail ">
+                    <div class="col-1 form-check-inline">
+                        <!-- <label for="recipient-name" class="col-form-label">#</label> -->
+                        <input type="text" class="form-control mt-1"  :value="index + 1" disabled>
+                    </div>
+                    <div class="col-2 form-check-inline">
+                        <!-- <label for="recipient-name" class="col-form-label">ผู้อยู่:</label> -->
+                        <select class="form-select mt-1" id="u_role" v-model="vcd.u_role" @change="v_ch(index,vcd.u_role,vcd.DN)" required>
+                          <option v-for="sur in sel_u_role" :value="sur" >{{sur}}</option>
+                        </select>
+                    </div>
+                    <div class=" col-2 form-check-inline">
+                        <!-- <label for="recipient-name" class="col-form-label">กลางวัน/กลางคืน:</label> -->
+                        <select class="form-select mt-2" id="DN" v-model="vcd.DN" @change="v_ch(index,vcd.u_role,vcd.DN)" required>
+                          <option value="กลางวัน" >กลางวัน</option>
+                          <option value="กลางคืน" >กลางคืน</option>
+                        </select>
+                    </div>
+                    <div class="col-2 form-check-inline">
+                        <!-- <label for="recipient-name" class="col-form-label">ชื่อเวร:</label> -->
+                        <select class="form-select mt-1" id="ven_com_name" v-model="vcd.ven_com_name" >
+                          <option v-for="svn in sel_ven_name" :value="svn"  >{{svn}}</option>
+                        </select>
+                    </div>
+                    <div class="col-2 form-check-inline">
+                        <!-- <label for="recipient-name" class="col-form-label">ค่าเวร:</label> -->
+                        <input type="number" class="form-control mt-1" id="recipient-name" v-model="vcd.price">
+                    </div>
+                    <div class="col-1 form-check-inline">
+                        <!-- <label for="recipient-name" class="col-form-label">#</label> -->
+                        <button @click.prevent="ven_p_d(index)" class="btn btn-danger" v-if="index != 0" >ลบ</button>
+                    </div>
+                </div>
+                <button @click.prevent="ven_p()" class="btn btn-success mt-2">เพิ่มหน้าที่</button>
+                <!-- {{ven_com}} -->
+                <!-- {{sel_ven_month}} -->
+              
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="reset_ven_com()" ref="close_modal">Close</button>
+                    <button type="submit" class="btn btn-primary" @click.prevent="save_ven_com()">save</button>
+                </div>
+        </form>
+      </div>
+    </div>
+  </div>
+    
+    <!--End Brands-->
+
+
+    <!-- Start Footer -->
+    <footer class="bg-dark" id="tempaltemo_footer">
+        <div class="container">
+            <div class="row">
+
+            </div>
+
+            <div class="row text-light mb-4">
+                
+            </div>
+        </div>
+
+        <div class="w-100 bg-black py-3">
+            
+        </div>
+
+    </footer>
+</div>
+    <!-- End Footer -->
+
+    <!-- Start Script -->
+    <script src="assets/js/jquery-1.11.0.min.js"></script>
+    <!-- <script src="assets/js/jquery-migrate-1.2.1.min.js"></script> -->
+    <!-- <script src="assets/js/bootstrap.bundle.min.js"></script> -->
+    <script src="assets/js/templatemo.js"></script>
+    <script src="assets/js/custom.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <script src="./node_modules/vue/dist/vue.global.js"></script>
+    <script src="./node_modules/vue/dist/vue.global.prod.js"></script>
+    <script src="./node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="./dist/js/ven_order.js"></script>  
+    <!-- End Script -->
+</body>
+
+</html>

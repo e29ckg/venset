@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>จัดเวร</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="./node_modules/sweetalert2/dist/sweetalert2.all.min.js">
+    <!-- <link rel="stylesheet" href="../plugins/toastr/toastr.min.css"> -->
+    <!-- Theme style -->
+    <!-- <link rel="stylesheet" href="../dist/css/adminlte.min.css"> -->
+    <link rel="stylesheet" href="./node_modules/fullcalendar/main.min.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./dist/css/index.css">
+    <!-- <link rel="stylesheet" href="../dist/css/modal.css"> -->
+    <!-- <link href="../dist/css/print.css" media="print" rel="stylesheet"> -->
+    <style>
+    [v-cloak] {
+        display: none;
+    }
+    </style>
+</head>
+<body >
+    <div id="appCal" v-cloak>
+                 
+        <div id='external-events'>
+            <p>
+              <strong>Draggable Events</strong>
+            </p>
+          
+            <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+              <div class='fc-event-main'>My Event 1</div>
+            </div>
+            <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+              <div class='fc-event-main'>My Event 2</div>
+            </div>
+            <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+              <div class='fc-event-main'>My Event 3</div>
+            </div>
+            <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+              <div class='fc-event-main'>My Event 4</div>
+            </div>
+            <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
+              <div class='fc-event-main'>My Event 5</div>
+            </div>
+          
+            <p>
+              <input type='checkbox' id='drop-remove' />
+              <label for='drop-remove'>remove after drop</label>
+            </p>
+        </div>
+          
+          <div id='calendar-container'>
+            <div id='calendar' ref="calendar"></div>
+          </div>
+        
+    </div>   
+    
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="./node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+    <!-- <script src="../plugins/toastr/toastr.min.js"></script> -->
+    <script src="./node_modules/fullcalendar/main.min.js"></script>
+
+    <script>   
+        var appCal = new Vue({
+            el: '#appCal',
+            data: {
+                datas: '',
+                url_base:'',
+                url_base_app:'',
+                url_base_now:'',
+                cal_modal:{
+                    id:'',
+                    kkey:'',
+                    mainkey:'', 
+                    kname:'',
+                    kcase:'',
+                    date_meet:'',
+                    time_meet:'',
+                    why:'',
+                    person_meet:[{name:''}],
+                    action:'insert'
+                }
+                
+            },
+            mounted: function () {
+                this.cal_render()
+                // this.loadData();
+                this.url_base = window.location.protocol + '//' + window.location.host;
+                this.url_base_app = window.location.protocol + '//' + window.location.host + '/tsu/counseling';
+                this.url_base_now = window.location.href;        
+        
+            },
+            methods: {
+                keyup() {
+                    // console.log(this.cal_modal.kkey.length);
+                    // console.log('dddd');
+                    if (this.cal_modal.kkey.length > 5) {
+                        this.getkkey();
+                    } else {
+                        this.cal_modal.mainkey = '';
+                        this.cal_modal.kname = '';
+                        this.cal_modal.kcase = '';
+                    }
+                },
+                getkkey(){
+                    axios.post(url_base_app + '/api/cal/get_kkey.php',{kkey:this.cal_modal.kkey})
+                        .then(response => {
+                            console.log(response.data);
+                            if (response.data.status) {
+                                this.cal_modal.mainkey = response.data.responseJSON[0].mainkey;
+                                this.cal_modal.kname = response.data.responseJSON[0].kname;
+                                this.cal_modal.kcase = response.data.responseJSON[0].kcase;
+                            } 
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                print_biloy(day){
+                    axios.post(url_base_app + '/api/cal/get_cal_day.php',{day:day})
+                        .then(response => {
+                            console.log(response.data);
+                            if (response.data.status) {
+                                localStorage.setItem("print_biloy",JSON.stringify(response.data.responseJSON))
+                                window.open(this.url_base_app + '/web/biloy/biloy.html','_blank')  
+                            } 
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                },
+                person_meet_add(){
+                    this.cal_modal.person_meet.push({name:''})
+                }, 
+                person_meet_del(){
+                    this.cal_modal.person_meet.pop()
+                },
+                cal_render(){
+                    // var calendarEl = document.getElementById('calendar');
+                    var calendarEl = this.$refs['calendar'];
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        locale: 'th',
+                        events: this.datas,
+                        googleCalendarApiKey: 'AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE',
+                        events: 'en.usa#holiday@group.v.calendar.google.com',
+                        eventClick: (info)=> {
+                            console.log(info)
+                            // this.cal_click(info)
+                        },
+                        dateClick:(date)=>{
+                            console.log(date)
+                            // this.cal_modal.date_meet = date.dateStr
+                            this.$refs['modal-show'].click();
+                        }
+                    });
+                    calendar.render(); 
+                },
+                cal_click(info){
+                    // console.log('test ' + info.event.id)
+                    // this.cal_modal.id = info.event.id
+                    axios.post(url_base_app + '/api/cal/get_cal_id.php',{id:info.event.id})
+                        .then(response => {
+                            console.log(response.data);
+                            if (response.data.status) {
+                                this.cal_modal = response.data.responseJSON[0]
+                                this.cal_modal.action = 'update'
+                            } 
+                        })
+                        .catch(function (error) {
+        
+                            console.log(error);
+                            // Toast.fire({
+                            //     icon: 'error',
+                            //     title: 'เกิดข้อผิดพลาด ' + error
+                            // })
+                        });
+        
+                    this.$refs['cal_modal_open'].click();
+        
+                },
+                loadData() {
+                    axios.post(url_base_app + '/api/cal/get_cal.php')
+                        .then(response => {
+                            console.log(response.data);
+                            if (response.data.status) {
+                                this.datas = response.data.responseJSON
+                                this.cal_render()                        
+                                // console.log(this.datas);
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: ' Ok.'
+                                });
+                            } else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: 'ไม่พบข้อมูล.'
+                                });
+                            }
+                            // console.log(response.data.massege);
+                            // console.log(response.status);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            // Toast.fire({
+                            //     icon: 'error',
+                            //     title: 'เกิดข้อผิดพลาด ' + error
+                            // })
+                        });
+                },        
+                cal_modal_save(){
+                    axios.post(url_base_app + '/api/cal/cal_save.php',{cal:this.cal_modal})
+                        .then(response => {
+                            if (response.data.status) {
+                                // this.datas = response.data
+                                this.$refs['cal_modal_close'].click();
+                                this.loadData()
+                                this.cls_modal()
+                            }else{
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.data.message
+                                })
+                            }  
+                        })
+                        .catch(function (error) {
+                            console.log(error);                    
+                        });
+                },
+                cal_del(){
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't Delete to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                      }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.cal_modal.action = 'delete'
+                            axios.post(url_base_app + '/api/cal/cal_save.php',{cal:this.cal_modal})
+                                .then(response => {
+                                    if (response.data.status) {
+                                        // this.datas = response.data
+                                        this.$refs['cal_modal_close'].click();
+                                        this.cls_modal()
+                                        this.loadData()
+                                        Toast.fire({
+                                            icon: 'success',
+                                            title: response.data.message
+                                        })
+                                    }else{
+                                        Toast.fire({
+                                            icon: 'error',
+                                            title: response.data.message
+                                        })
+                                    }  
+                                })
+                                .catch(function (error) {
+                                    console.log(error);                    
+                                });
+                        }
+                      });  
+        
+                    
+                },
+                
+                cls_modal(){
+                    this.cal_modal= {id:'', kkey:'', mainkey:'', kname:'', kcase:'', date_meet:'', time_meet:'', why:'', person_meet:[{name:''}], action:'insert'}
+                },
+                date_thai(day){
+                    if(day == ''){
+                        return '-'
+                    }
+                    var monthNamesThai = ["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤษจิกายน","ธันวาคม"];
+                    var dayNames = ["วันอาทิตย์ที่","วันจันทร์ที่","วันอังคารที่","วันพุทธที่","วันพฤหัสบดีที่","วันศุกร์ที่","วันเสาร์ที่"];
+                    var monthNamesEng = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                    var dayNamesEng = ['Sunday','Monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+                    var d = new Date(day);
+                    return d.getDate() + ' ' + monthNamesThai[d.getMonth()] + "  " + (d.getFullYear() + 543)
+                },
+        
+            }
+               
+        
+        });
+            </script>
+</body>
+</html>
