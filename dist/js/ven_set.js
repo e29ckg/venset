@@ -36,9 +36,14 @@ Vue.createApp({
     profiles:[],
 
     ven_com_id: '1566445991',
+    ven_com_num: '1245/2565',
+    ven_com_date: '1245/2565',
     ven_month : '2022-10',
     ven_time  : '08:30:02',
     DN        : 'กลางวัน',
+    u_role    : 'ผู้พิพากษา',
+    ven_com_name    : '',
+    price    : '1500',
 
     isLoading: false,
   }
@@ -105,7 +110,6 @@ Vue.createApp({
       calendar.render(); 
   },
   drop_insert(uid,dateStr){
-
     axios.post(this.url_base_app + '/api/ven_set/ven_insert.php',{
                         uid         : uid,
                         ven_date    : dateStr,

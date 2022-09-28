@@ -148,29 +148,19 @@ Vue.createApp({
       },
       update(ven_com_num,ven_com_date,ven_month){
         axios.post(this.url_base_app + './api/ven_order/get_ven_com_update.php',{
-          ven_com_num:ven_com_num,
-          ven_com_date:ven_com_date,
-          ven_month:ven_month})
+          ven_com_num   : ven_com_num,
+          ven_com_date  : ven_com_date,
+          ven_month     : ven_month})
         .then(response => {
             console.log(response.data.respJSON.id);
             if (response.data.status) {
-                this.ven_com =  
-                {
-                  id            : response.data.respJSON.id,
+                this.ven_com =  {
                   ven_com_num   : response.data.respJSON.ven_com_num,
                   ven_com_date  : response.data.respJSON.ven_com_date,
                   ven_month     : response.data.respJSON.ven_month,
-                  ven_com_detail : response.data.respJSON.detail,
-                  // [
-                  //   {
-                  //     'ven_time'  : response.data.respJSON.ven_time,
-                  //     'DN'        : response.data.respJSON.DN,
-                  //     'u_role'    : response.data.respJSON.u_role,
-                  //     'ven_com_name'  : response.data.respJSON.ven_com_name,
-                  //     'price'     : response.data.respJSON.price,
-                  //     'comment'   : response.data.respJSON.comment
-                  //   }],
+                  ven_com_detail : response.data.respJSON.detail
                 }  
+                this.ven_com.act = 'update'
                 this.$refs['show_modal'].click()                  
             } 
         })
@@ -179,12 +169,12 @@ Vue.createApp({
         console.log(id)
         Swal.fire({
           title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          icon: 'warning',
-          showCancelButton: true,
+          text  : "You won't be able to revert this!",
+          icon  : 'warning',
+          showCancelButton  : true,
           confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+          cancelButtonColor : '#d33',
+          confirmButtonText : 'Yes, delete it!'
         }).then((result) => {
           if (result.isConfirmed) {
             axios.post(this.url_base_app + './api/ven_order/ven_com_del.php',{id:id,action:'delete'})

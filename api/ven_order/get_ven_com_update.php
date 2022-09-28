@@ -36,6 +36,7 @@ $datas = array();
         $detail =array(); 
         foreach($result as $rs){
           array_push($detail,array(
+            'id'  => $rs->id,
             'ven_time'  => $rs->ven_time,
             'DN'        => $rs->DN,
             'u_role'    => $rs->u_role,
