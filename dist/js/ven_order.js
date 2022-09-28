@@ -91,11 +91,11 @@ Vue.createApp({
                           'comment'   : '',
                           'st'        : '',
                         }],
-                      // act:'insert',
+                      act:'insert',
                     }
                     let icon    = 'success'
                     let message = response.data.message
-                    this.alert(icon,message,2000)
+                    this.alert(icon,message,1000)
   
                 } 
             })
