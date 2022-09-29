@@ -75,8 +75,9 @@ try{
 
             }else{
                 // $ven_time = $_DN[$vcd->DN].':'.$vt[$vcd->u_role]; 
-                $sql = "INSERT INTO ven_com(ven_com_num, ven_com_date, ven_month, ven_time, DN, u_role, ven_com_name, price, status) 
-                                  VALUE(:ven_com_num, :ven_com_date, :ven_month, :ven_time, :DN, :u_role, :ven_com_name, :price, 1);";        
+                $rst = generateRandomString();
+                $sql = "INSERT INTO ven_com(ven_com_num, ven_com_date, ven_month, ven_time, DN, u_role, ven_com_name, price, status, ref) 
+                                  VALUE(:ven_com_num, :ven_com_date, :ven_month, :ven_time, :DN, :u_role, :ven_com_name, :price, 1, :ref);";        
                 $query = $dbcon->prepare($sql);
                 $query->bindParam(':ven_com_num',$ven_com_num, PDO::PARAM_STR);
                 $query->bindParam(':ven_com_date',$ven_com_date, PDO::PARAM_STR);
@@ -86,6 +87,7 @@ try{
                 $query->bindParam(':u_role',$vcd->u_role, PDO::PARAM_STR);
                 $query->bindParam(':ven_com_name',$vcd->ven_com_name, PDO::PARAM_STR);
                 $query->bindParam(':price',$vcd->price, PDO::PARAM_STR);
+                $query->bindParam(':ref', $rst, PDO::PARAM_STR);
                 $query->execute();
             }
             
@@ -131,8 +133,9 @@ try{
                 // array_push($datas,array(
                 //     ' No-id | '
                 // ));
-                $sql = "INSERT INTO ven_com(ven_com_num, ven_com_date, ven_month, ven_time, DN, u_role, ven_com_name, price, status) 
-                                  VALUE(:ven_com_num, :ven_com_date, :ven_month, :ven_time, :DN, :u_role, :ven_com_name, :price, 1);";        
+                $rst = generateRandomString();
+                $sql = "INSERT INTO ven_com(ven_com_num, ven_com_date, ven_month, ven_time, DN, u_role, ven_com_name, price, status, ref) 
+                                  VALUE(:ven_com_num, :ven_com_date, :ven_month, :ven_time, :DN, :u_role, :ven_com_name, :price, 1, :ref);";        
                 $query = $dbcon->prepare($sql);
                 $query->bindParam(':ven_com_num',$ven_com_num, PDO::PARAM_STR);
                 $query->bindParam(':ven_com_date',$ven_com_date, PDO::PARAM_STR);
@@ -142,6 +145,7 @@ try{
                 $query->bindParam(':u_role',$vcd->u_role, PDO::PARAM_STR);
                 $query->bindParam(':ven_com_name',$vcd->ven_com_name, PDO::PARAM_STR);
                 $query->bindParam(':price',$vcd->price, PDO::PARAM_STR);
+                $query->bindParam(':ref', $rst, PDO::PARAM_STR);
                 $query->execute();
             }
 
@@ -161,5 +165,9 @@ try{
         http_response_code(400);
         echo json_encode(array('status' => false, 'massege' => 'เกิดข้อผิดพลาด..' . $e->getMessage()));
     }
+}
+
+function generateRandomString($length = 20) {
+    return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
 }
 

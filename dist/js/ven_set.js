@@ -35,29 +35,39 @@ Vue.createApp({
     },
     profiles:[],
 
-    ven_com_id: '1566445991',
-    ven_com_num: '1245/2565',
-    ven_com_date: '1245/2565',
-    ven_month : '2022-10',
-    ven_time  : '08:30:02',
-    DN        : 'กลางวัน',
-    u_role    : 'ผู้พิพากษา',
-    ven_com_name    : '',
-    price    : '1500',
+    ven_coms  :[],
+    ven_coms_index:'',
 
-    isLoading: false,
+    ven_com_id: '',
+    ven_month : '2022-09-31',
+    DN        : '',
+    u_role    : '',
+    price     : '',
+
+    isLoading : false,
   }
   },
   async mounted(){
     this.url_base = window.location.protocol + '//' + window.location.host;
     this.url_base_app = window.location.protocol + '//' + window.location.host + '/venset/';
     await this.get_vens()
+    await this.get_ven_coms()
     this.get_profiles()
     
   },
   watch: {
     q(){
       this.ch_search_pro()
+    },
+    ven_coms_index(){
+      let i = this.ven_coms_index
+      this.ven_com_id = this.ven_coms[i].id
+      this.ven_month = this.ven_coms[i].ven_month
+      this.DN = this.ven_coms[i].DN
+      this.u_role = this.ven_coms[i].u_role
+      this.ven_com_name = this.ven_coms[i].ven_com_name
+      this.$refs['close_modal'].click()  
+      this.cal_render()
     }
   },
   methods: {
@@ -67,6 +77,7 @@ Vue.createApp({
       
       var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
+          initialDate: this.ven_month,
           locale: 'th',
           events: this.datas,
           // googleCalendarApiKey: 'AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE',
@@ -102,7 +113,7 @@ Vue.createApp({
               // is the "remove after drop" checkbox checked?
               // if (checkbox.checked) {
                   // if so, remove the element from the "Draggable Events" list
-                  info.draggedEl.parentNode.removeChild(info.draggedEl);
+                  // info.draggedEl.parentNode.removeChild(info.draggedEl);
               // }
               
           }
@@ -110,24 +121,36 @@ Vue.createApp({
       calendar.render(); 
   },
   drop_insert(uid,dateStr){
-    axios.post(this.url_base_app + '/api/ven_set/ven_insert.php',{
-                        uid         : uid,
-                        ven_date    : dateStr,
-                        ven_time    : this.ven_time,
-                        DN          : this.DN,
-                        ven_month   : this.ven_month,
-                        ven_com_id  : this.ven_com_id
-                      })
-        .then(response => {
-            console.log(response.data);
-            if (response.data.status) {
-              this.get_vens()
-            } 
-        })
-        .catch(function (error) {        
-            console.log(error);
-            
-        });
+    if(this.ven_com_id ){
+      axios.post(this.url_base_app + '/api/ven_set/ven_insert.php',{
+                          uid         : uid,
+                          ven_date    : dateStr,
+                          ven_com_id  : this.ven_com_id
+                        })
+          .then(response => {
+              console.log(response.data);
+              if (response.data.status) {
+                this.get_vens()
+                swal.fire({
+                  icon: 'success',
+                  title: response.data.message,
+                  showConfirmButton: true,
+                  timer: 1000
+                });
+              } 
+          })
+          .catch(function (error) {        
+              console.log(error);
+              
+          });
+    }else{
+      let icon    = 'warning'
+      let message = []
+      
+      if(this.ven_com_id   == ''){message.push('กรุณาเลือกคำสั่ง')}
+      this.alert(icon,message)
+      info.revert()
+    }
     
   }, 
   event_drop(id,start){
@@ -162,6 +185,18 @@ Vue.createApp({
         console.log(error);
     });
   },
+  get_ven_coms(){
+    axios.get(this.url_base_app + './api/ven_set/get_ven_coms.php')
+    .then(response => {
+        console.log(response.data.respJSON);
+        if (response.data.status) {
+            this.ven_coms = response.data.respJSON;
+        } 
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  },
   get_profiles(){
       axios.get(this.url_base_app + './api/ven_set/get_users.php')
           .then(response => {
@@ -182,8 +217,25 @@ Vue.createApp({
           .catch(function (error) {
               console.log(error);
           });
-  },                
-  
+  },
+  set_ven_com(){
+    let i = this.ven_coms_index
+    this.ven_com_id = this.ven_coms[i].id
+    this.ven_month = this.ven_coms[i].ven_month
+    this.DN = this.ven_coms[i].DN
+    this.u_role = this.ven_coms[i].u_role
+    this.ven_com_name = this.ven_coms[i].ven_com_name
+    this.price = this.ven_coms[i].price
+  },   
+
+  alert(icon,message,timer=0){
+    swal.fire({
+    icon: icon,
+    title: message,
+    showConfirmButton: true,
+    timer: timer
+  });
+  },
   
   reset_search(){
     this.q = ''

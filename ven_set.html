@@ -102,10 +102,11 @@
   
   <div id='external-events'>
     <p>
+      <strong>{{ven_com_id}}</strong>
       <strong>คำสั่งที่ {{ven_com_num}}</strong>
-      <br>ผู้พิพากษา<br>
-      หมายจับ-หมายค้น แขวง
-    </p>
+      {{u_role}}<br>
+      {{DN}}
+        </p>
     
     <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event' v-for="pf,index in profiles" :data-event="pf.data_event" :data-uid="pf.uid">
       <div class='fc-event-main'>{{index + 1}} {{pf.name}} {{pf.uid}}</div>
@@ -120,13 +121,47 @@
 
   <div id='calendar-container'>
     <div>
-      <button class="btn btn-primary">เลือกคำสั่ง</button> 
-        {{ven_com_date}} {{ven_month}} {{ven_time}} {{DN}} {{u_role}} {{ven_com_name}} {{price}}
+      
+      <!-- <div class="col-12 form-check-inline"> -->
+        <div class="row">
+          <label for="recipient-name" class="col-form-label">เลือกคำสั่ง:</label>
+          <select class="form-select mt-1 co-10" id="u_role" v-model="ven_coms_index" placeholder="กรุณาเลือกคำสั่ง / หน้าที่" >
+            <option v-for="vc,index in ven_coms" :value="index" >({{vc.id}}) {{vc.ven_com_num}} -> {{vc.ven_com_date}} -> {{vc.ven_time}} -> {{vc.u_role}} -> {{vc.DN}} -> {{vc.ven_com_name}} -> {{vc.price}} </option>
+          </select>
+
+        </div>
+      <!-- </div> -->
     </div>
     <div id='calendar' ref="calendar"></div>
   </div>
   {{datas}}
   {{profiles}}
+
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ref="close_modal"></button>
+        </div>
+        <div class="modal-body">
+            <form @submit="set_ven_com()">
+              <div class="col-12 form-check-inline">
+                <!-- <label for="recipient-name" class="col-form-label">ผู้อยู่:</label> -->
+                <select class="form-select mt-1" id="u_role" v-model="ven_coms_index" required>
+                  <option v-for="vc,index in ven_coms" :value="index" >{{vc.id}} {{vc.ven_com_num}} {{vc.ven_com_date}} {{vc.ven_time}} {{vc.u_role}} {{vc.DN}} {{vc.ven_com_name}} {{vc.price}} </option>
+                </select>
+              </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+                    <button type="submit" class="btn btn-primary" @click="set_ven_com()">set</button>
+                </div>
+        </form>
+      </div>
+      {{ven_coms}}
+    </div>
+  </div>
 </div>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
