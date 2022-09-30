@@ -136,9 +136,7 @@ Vue.createApp({
       });
       calendar.render(); 
   },
-  sel_vem_com(){
-    this.get_profiles()
-  },
+  
   cal_click(id){
     axios.post(this.url_base_app + '/api/ven_set/get_ven.php',{id:id})
         .then(response => {
@@ -249,8 +247,25 @@ Vue.createApp({
         console.log(error);
     });
   },
+  sel_vem_com(ven_com_index){
+    let vci = this.ven_coms[ven_com_index].id
+    console.log(vci)
+    // this.get_profiles()
+    axios.post(this.url_base_app + './api/ven_set/get_users.php',{ven_com_id:vci})
+          .then(response => {
+              console.log(response.data.respJSON);
+              if (response.data.status) {
+                  // pfs = response.data.respJSON;
+                  this.profiles = response.data.respJSON;
+                  
+              } 
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+  },
   get_profiles(){
-      axios.get(this.url_base_app + './api/ven_set/get_users.php')
+      axios.post(this.url_base_app + './api/ven_set/get_users.php',{ven_com_id:this.ven_com_id})
           .then(response => {
               console.log(response.data.respJSON);
               if (response.data.status) {
@@ -272,13 +287,13 @@ Vue.createApp({
           });
   },
   set_ven_com(){
-    let i = this.ven_coms_index
+    let i           = this.ven_coms_index
     this.ven_com_id = this.ven_coms[i].id
-    this.ven_month = this.ven_coms[i].ven_month
-    this.DN = this.ven_coms[i].DN
-    this.u_role = this.ven_coms[i].u_role
+    this.ven_month  = this.ven_coms[i].ven_month
+    this.DN         = this.ven_coms[i].DN
+    this.u_role     = this.ven_coms[i].u_role
     this.ven_com_name = this.ven_coms[i].ven_com_name
-    this.price = this.ven_coms[i].price
+    this.price      = this.ven_coms[i].price
   },
   ven_del(id){
     Swal.fire({
@@ -303,7 +318,7 @@ Vue.createApp({
               }else{
                 icon = "warning";
                 message = response.data.message;
-                this.alert(icon,message,0)
+                this.alert(icon,message)
               } 
           })
           .catch(function (error) {
@@ -311,7 +326,6 @@ Vue.createApp({
           });
       }
     })
-
     
   },   
 

@@ -30,13 +30,13 @@ try{
         // $model_ven_DIS = $queryVen->fetchAll(PDO::FETCH_OBJ);
         if($query->rowCount() >0){
             http_response_code(200);
-            echo json_encode(array('status' => 'false', 'message' => 'เวรนี้ไม่สามารถได้เนื่องจากมีการนำไปใช้ในใบเปลี่ยนเวร')); 
+            echo json_encode(array('status' => false, 'message' => 'เวรนี้ไม่สามารถได้เนื่องจากมีการนำไปใช้ในใบเปลี่ยนเวร')); 
             exit;
         }else{
             $sql = "DELETE FROM ven WHERE id = $id";
             $dbcon->exec($sql);
             http_response_code(200);
-            echo json_encode(array('status' => 'success', 'message' => 'Record deleted successfully'));              
+            echo json_encode(array('status' => true, 'message' => 'Record deleted successfully'));              
             exit;
         }         
     // }    

@@ -47,6 +47,10 @@ $datas = array();
             echo json_encode(array('status' => false, 'message' => 'ไม่มีคำสั่งนี้', 'respJSON' => $result));
             exit;
         }
+        if($result->ven_month != $ven_date){
+
+        }
+
 
         $id = time();
         $ven_time    = $result->ven_time;
@@ -57,7 +61,7 @@ $datas = array();
         $ref1 = generateRandomString($length = 20);
         $ref2 =  $result->ref;
 
-        $sql_VU = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date' AND status = 2 LIMIT 1 ";
+        $sql_VU = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date' AND status = 1 LIMIT 1 ";
         $query_VU = $dbcon->prepare($sql_VU);
         $query_VU->execute();
         $res_VU = $query_VU->fetch(PDO::FETCH_OBJ);
@@ -70,7 +74,7 @@ $datas = array();
 
         if($DN =='กลางคืน'){
             $ven_date_u1 = date("Y-m-d", strtotime('+1 day', strtotime($ven_date)));
-            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางวัน' AND status = 2 LIMIT 1";
+            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางวัน' AND status = 1 LIMIT 1";
             $query = $dbcon->prepare($sql);
             $query->execute();
             $res = $query->fetch(PDO::FETCH_OBJ);
@@ -83,7 +87,7 @@ $datas = array();
         }
         if($DN =='กลางวัน'){
             $ven_date_u1 = date("Y-m-d", strtotime('-1 day', strtotime($ven_date)));
-            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางคืน' AND status = 2 LIMIT 1";
+            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางคืน' AND status = 1 LIMIT 1";
             $query = $dbcon->prepare($sql);
             $query->execute();
             $res = $query->fetch(PDO::FETCH_OBJ);
@@ -96,7 +100,7 @@ $datas = array();
         }      
 
         $sql = "INSERT INTO ven(id, ven_date, ven_time, DN, ven_month, ven_com_id, user_id, status, ref1, ref2, create_at) 
-                VALUE(:id, :ven_date, :ven_time, :DN, :ven_month, :ven_com_id, :user_id, 2, :ref1, :ref2, :create_at);";      
+                VALUE(:id, :ven_date, :ven_time, :DN, :ven_month, :ven_com_id, :user_id, 1, :ref1, :ref2, :create_at);";      
 
         $query = $dbcon->prepare($sql);
         $query->bindParam(':id',$id, PDO::PARAM_INT);

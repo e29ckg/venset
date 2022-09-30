@@ -14,22 +14,7 @@ $date_s = explode("T", $data->start);
 $ven_date   = $date_s[0];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-/**
-            id: 'a',
-            title: 'my event',
-            start: '2022-09-01',
-            extendedProps: {
-                uid: 5555,
-                uname: '',
-                ven_date: '',
-                ven_time: '',
-                DN: '',
-                ven_month: '',
-                ven_com_id: '',
-                st: '',
 
-            }
- */
 $datas = array();
     // The request is using the POST method
     try{
@@ -42,7 +27,7 @@ $datas = array();
         $user_id = $res_v->user_id;
         $DN      = $res_v->DN;
 
-        $sql_VU = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date' AND status = 2 LIMIT 1";
+        $sql_VU = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date' AND status = 1 LIMIT 1";
         $query_VU = $dbcon->prepare($sql_VU);
         $query_VU->execute();
         $res_VU = $query_VU->fetch(PDO::FETCH_OBJ);
@@ -55,7 +40,7 @@ $datas = array();
 
         if($DN =='กลางคืน'){
             $ven_date_u1 = date("Y-m-d", strtotime('+1 day', strtotime($ven_date)));
-            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางวัน' AND status = 2 LIMIT 1";
+            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางวัน' AND status = 1 LIMIT 1";
             $query = $dbcon->prepare($sql);
             $query->execute();
             $res = $query->fetch(PDO::FETCH_OBJ);
@@ -68,7 +53,7 @@ $datas = array();
         }
         if($DN =='กลางวัน'){
             $ven_date_u1 = date("Y-m-d", strtotime('-1 day', strtotime($ven_date)));
-            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางคืน' AND status = 2 LIMIT 1";
+            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางคืน' AND status = 1 LIMIT 1";
             $query = $dbcon->prepare($sql);
             $query->execute();
             $res = $query->fetch(PDO::FETCH_OBJ);
