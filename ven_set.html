@@ -89,7 +89,12 @@
     z-index: 1;
     margin-left: 200px;
   }
-
+  
+  #vc {
+    position: relative;
+    z-index: 3;
+    margin-left: 200px;
+  }
   #calendar {
     max-width: 1100px;
     margin: 20px auto;
@@ -101,6 +106,12 @@
 <div id="venSet">
   
   <div id='external-events'>
+    <form >
+      <select class="form-select mt-1 co-10" id="u_role" v-model="ven_coms_index" placeholder="กรุณาเลือกคำสั่ง / หน้าที่" >
+        <option v-for="vc,index in ven_coms" :value="index" >({{vc.id}}) {{vc.ven_com_num}} -> {{vc.ven_com_date}} -> {{vc.ven_time}} -> {{vc.u_role}} -> {{vc.DN}} -> {{vc.ven_com_name}} -> {{vc.price}} </option>
+      </select>
+
+    </form>
     <p>
       <strong>{{ven_com_id}}</strong>
       <strong>คำสั่งที่ {{ven_com_num}}</strong>
@@ -118,25 +129,25 @@
       <label for='drop-remove'>remove after drop</label>
     </p>
   </div>
-
+  <!-- <div class="row" id='vc'>
+    <label for="recipient-name" class="col-form-label">เลือกคำสั่ง:</label>
+    <form >
+      <select class="form-select mt-1 co-10" id="u_role" v-model="ven_coms_index" placeholder="กรุณาเลือกคำสั่ง / หน้าที่" >
+        <option v-for="vc,index in ven_coms" :value="index" >({{vc.id}}) {{vc.ven_com_num}} -> {{vc.ven_com_date}} -> {{vc.ven_time}} -> {{vc.u_role}} -> {{vc.DN}} -> {{vc.ven_com_name}} -> {{vc.price}} </option>
+      </select>
+    </form>
+  </div> -->
   <div id='calendar-container'>
-    <div>
-      
-      <!-- <div class="col-12 form-check-inline"> -->
-        <div class="row">
-          <label for="recipient-name" class="col-form-label">เลือกคำสั่ง:</label>
-          <select class="form-select mt-1 co-10" id="u_role" v-model="ven_coms_index" placeholder="กรุณาเลือกคำสั่ง / หน้าที่" >
-            <option v-for="vc,index in ven_coms" :value="index" >({{vc.id}}) {{vc.ven_com_num}} -> {{vc.ven_com_date}} -> {{vc.ven_time}} -> {{vc.u_role}} -> {{vc.DN}} -> {{vc.ven_com_name}} -> {{vc.price}} </option>
-          </select>
-
-        </div>
-      <!-- </div> -->
-    </div>
-    <div id='calendar' ref="calendar"></div>
+    <div>{{label_message}} </div>
+     <div id='calendar' ref="calendar"></div>
   </div>
   {{datas}}
   {{profiles}}
 
+  <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ref="show_modal" hidden>
+    Launch static backdrop modal
+</button>
   <!-- Modal -->
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -146,20 +157,9 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ref="close_modal"></button>
         </div>
         <div class="modal-body">
-            <form @submit="set_ven_com()">
-              <div class="col-12 form-check-inline">
-                <!-- <label for="recipient-name" class="col-form-label">ผู้อยู่:</label> -->
-                <select class="form-select mt-1" id="u_role" v-model="ven_coms_index" required>
-                  <option v-for="vc,index in ven_coms" :value="index" >{{vc.id}} {{vc.ven_com_num}} {{vc.ven_com_date}} {{vc.ven_time}} {{vc.u_role}} {{vc.DN}} {{vc.ven_com_name}} {{vc.price}} </option>
-                </select>
-              </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
-                    <button type="submit" class="btn btn-primary" @click="set_ven_com()">set</button>
-                </div>
-        </form>
-      </div>
-      {{ven_coms}}
+            <button @click="ven_del(data_event.id)">ลบ</button>
+        </div>
+      {{data_event}}
     </div>
   </div>
 </div>

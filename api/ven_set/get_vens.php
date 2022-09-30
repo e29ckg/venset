@@ -33,9 +33,9 @@ $datas = array();
 
     // The request is using the POST method
     try{
-        $sql = "SELECT v.*, p.name FROM ven as v 
+        $sql = "SELECT v.id, v.ven_date, v.ven_time, p.name FROM ven as v 
         INNER JOIN `profile` as p ON v.user_id = p.user_id
-        WHERE v.status = 1 AND p.`status` = 10
+        WHERE v.status = 2 AND p.`status` = 10
         ORDER BY v.ven_date DESC
         LIMIT 200";
         $query = $dbcon->prepare($sql);
