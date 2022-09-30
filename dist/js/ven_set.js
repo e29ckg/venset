@@ -38,20 +38,8 @@ Vue.createApp({
     },
     profiles:[],
 
-<<<<<<< HEAD
-    ven_com_id: '1663173990',
-    ven_com_num: '1254',
-    ven_com_date: '2022-09-28',
-    ven_month : '2023-01',
-    ven_time  : '08:30:03',
-    DN        : 'กลางวัน',
-    u_role    : 'จนท.2',
-    ven_com_name    : 'ฟื้นฟู/ตรวจสอบการจับ/หมายจับ-ค้น',
-    price    : '1500',
-=======
     ven_coms  :[],
     ven_coms_index:'',
->>>>>>> 9f5683a43af0c42ce848bcf868c49c01a427fab6
 
     ven_com_id: '',
     ven_month : '',
