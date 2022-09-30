@@ -70,7 +70,7 @@ $datas = array();
 
         if($DN =='กลางคืน'){
             $ven_date_u1 = date("Y-m-d", strtotime('+1 day', strtotime($ven_date)));
-            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND status = 2 LIMIT 1";
+            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางวัน' AND status = 2 LIMIT 1";
             $query = $dbcon->prepare($sql);
             $query->execute();
             $res = $query->fetch(PDO::FETCH_OBJ);
@@ -83,7 +83,7 @@ $datas = array();
         }
         if($DN =='กลางวัน'){
             $ven_date_u1 = date("Y-m-d", strtotime('-1 day', strtotime($ven_date)));
-            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND status = 2 LIMIT 1";
+            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางคืน' AND status = 2 LIMIT 1";
             $query = $dbcon->prepare($sql);
             $query->execute();
             $res = $query->fetch(PDO::FETCH_OBJ);

@@ -27,9 +27,15 @@ $datas = array();
         $result = $query->fetchAll(PDO::FETCH_OBJ);
 
         if($query->rowCount() > 0){                        //count($result)  for odbc
-            
+            foreach($result as $rs){
+                array_push($datas, array(
+                    'id' => $rs->user_id,
+                    'uid' => $rs->user_id,
+                    'name' => $rs->fname.$rs->name . ' ' .$rs->sname,
+                ));
+            }
             http_response_code(200);
-            echo json_encode(array('status' => true, 'massege' => 'สำเร็จ', 'respJSON' => $result));
+            echo json_encode(array('status' => true, 'massege' => 'สำเร็จ', 'respJSON' => $datas));
             exit;
         }
      

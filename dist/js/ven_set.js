@@ -42,12 +42,12 @@ Vue.createApp({
     ven_coms_index:'',
 
     ven_com_id: '',
-    ven_month : '2022-12-31',
+    ven_month : '',
     DN        : '',
     u_role    : '',
     price     : '',
 
-    label_message : 'กรุณาเลือกคำสั่ง',
+    label_message : '<--กรุณาเลือกคำสั่ง',
     isLoading : false,
   }
   },
@@ -55,10 +55,10 @@ Vue.createApp({
     this.url_base = window.location.protocol + '//' + window.location.host;
     this.url_base_app = window.location.protocol + '//' + window.location.host + '/venset/';
     // const d = 
-    // this.ven_month = new Date();
+    this.ven_month = new Date();
     await this.get_vens()
     await this.get_ven_coms()
-    this.get_profiles()
+    // this.get_profiles()
     
   },
   watch: {
@@ -68,17 +68,20 @@ Vue.createApp({
     ven_coms_index(){
       let i = this.ven_coms_index
       if(this.ven_coms[i].id){
-        this.label_message = this.ven_coms[i].id + ' -> ' 
-                  + this.ven_coms[i].ven_month + ' -> ' 
-                  + this.ven_coms[i].DN + ' -> ' 
-                  + this.ven_coms[i].u_role + ' -> ' 
-                  + this.ven_coms[i].ven_com_name + ' -> ' 
-                  + this.ven_coms[i].price
+        this.label_message = 
+        // this.ven_coms[i].id + ' -> ' 
+        this.ven_coms[i].u_role + ' -> ' 
+        + this.ven_coms[i].DN + ' -> ' 
+        + this.ven_coms[i].ven_month + ' -> ' 
+        + this.ven_coms[i].ven_com_name + ' -> ' 
+        + this.ven_coms[i].price ;
+
         this.ven_com_id =this.ven_coms[i].id 
-        this.ven_month =this.ven_month[i].id
+        this.ven_month  =this.ven_coms[i].ven_month
+        this.u_role     =this.ven_coms[i].u_role
+        this.DN         =this.ven_coms[i].DN
+        
         this.cal_render()
-      }else{
-        this.label_message = 'กรุณาเลือกคำสั่ง'
       }
     }
   },
@@ -90,8 +93,9 @@ Vue.createApp({
       var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
           initialDate: this.ven_month,
-          locale: 'th',
-          events: this.datas,
+          firstDay    : 1,
+          locale      : 'th',
+          events      : this.datas,
           eventClick: (info)=> {
               console.log(info.event.id +' '+info.event.title)
               console.log(info.event.extendedProps)
@@ -109,11 +113,13 @@ Vue.createApp({
               // alert(info.event.id + info.event.title + " was dropped on " + info.event.start);
               // alert(info.event.title + " was dropped on " + info.event.start.toISOString());
 
-              if (!confirm("Are you sure about this change?")) {
+              // if (!confirm("Are you sure about this change?")) {
+              //     info.revert();
+              // }else{
+                if(!this.event_drop(info.event.id,info.event.start)){
                   info.revert();
-              }else{
-                this.event_drop(info.event.id,info.event.start)
-              }
+                }
+              // }
           },
           droppable: true,
           drop: (info)=> {
@@ -129,6 +135,9 @@ Vue.createApp({
           }
       });
       calendar.render(); 
+  },
+  sel_vem_com(){
+    this.get_profiles()
   },
   cal_click(id){
     axios.post(this.url_base_app + '/api/ven_set/get_ven.php',{id:id})
@@ -202,7 +211,13 @@ Vue.createApp({
               showConfirmButton: true,
               timer: 1000
             });
-        } 
+            return true
+        } else{
+          icon = 'warning'
+          message = response.data.message;
+          this.alert(icon,message,timer=0)
+          return false
+        }
     })
     .catch(function (error) {
         console.log(error);
@@ -239,16 +254,17 @@ Vue.createApp({
           .then(response => {
               console.log(response.data.respJSON);
               if (response.data.status) {
-                  pfs = response.data.respJSON;
-                  for (let i = 0; i < pfs.length; i++) {
-                      this.profiles.push({
-                          'id' : pfs[i].user_id,
-                          'uid' : pfs[i].user_id,
-                          'name' : pfs[i].name,
-                          'sname' : pfs[i].sname,
+                  // pfs = response.data.respJSON;
+                  this.profiles = response.data.respJSON;
+                  // for (let i = 0; i < pfs.length; i++) {
+                  //     this.profiles.push({
+                  //         'id' : pfs[i].user_id,
+                  //         'uid' : pfs[i].user_id,
+                  //         'name' : pfs[i].name,
+                  //         'sname' : pfs[i].sname,
                           
-                      })
-                  }
+                  //     })
+                  // }
               } 
           })
           .catch(function (error) {
