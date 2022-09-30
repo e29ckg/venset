@@ -8,19 +8,23 @@ header("Content-Type: application/json; charset=utf-8");
 
 include "../config_db.php";
 
-// $data = json_decode(file_get_contents("php://input"));
+$data = json_decode(file_get_contents("php://input"));
+$u_role = $data->u_role;
+$DN     = $data->DN;
 
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 /**
  *           
  */
 $datas = array();
 
-
     // The request is using the POST method
     try{
-        $sql = "SELECT * FROM ven_user as vu INNER JOIN `profile` as p ON p.user_id = vu.user_id  WHERE p.status = 10 ORDER BY vu.order ASC";
+        if($u_role == 'ผู้พิพากษา'){
+            $sql = "SELECT * FROM ven_user as vu INNER JOIN `profile` as p ON p.user_id = vu.user_id  WHERE vu.comment = '$u_role' AND  p.status = 10 ORDER BY vu.order ASC"; 
+                    
+        }
+        // $sql = "SELECT * FROM ven_user as vu INNER JOIN `profile` as p ON p.user_id = vu.user_id  WHERE  p.status = 10 ORDER BY vu.order ASC";
         $query = $dbcon->prepare($sql);
         // $query->bindParam(':kkey',$data->kkey, PDO::PARAM_STR);
         $query->execute();
