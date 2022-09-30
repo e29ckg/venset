@@ -262,7 +262,7 @@ https://templatemo.com/tm-559-zay-shop
                         <tbody>
                             <tr v-for="d in datas">
                                 <td>
-                                    <input type="checkbox" :name="d.name" :id="d.user_id" v-model="d.ck" >
+                                    <input type="checkbox" :name="d.name" :id="d.user_id" v-model="d.ck" @change="ck_set(u_role,)" >
                                     {{d.user_id}}
                                 </td>
                                 <td>{{d.name}}</td>
