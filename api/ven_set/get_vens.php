@@ -33,10 +33,10 @@ $datas = array();
 
     // The request is using the POST method
     try{
-        $sql = "SELECT v.*, p.name FROM ven as v 
+        $sql = "SELECT v.id, v.ven_date, v.ven_time, p.name FROM ven as v 
         INNER JOIN `profile` as p ON v.user_id = p.user_id
-        WHERE v.status = 1 AND p.`status` = 10
-        ORDER BY v.create_at DESC
+        WHERE v.status = 2 AND p.`status` = 10
+        ORDER BY v.ven_date DESC
         LIMIT 200";
         $query = $dbcon->prepare($sql);
         // $query->bindParam(':kkey',$data->kkey, PDO::PARAM_STR);
@@ -58,7 +58,7 @@ $datas = array();
         }
      
         http_response_code(200);
-        echo json_encode(array('false' => true, 'massege' => 'ไม่พบข้อมูล '));
+        echo json_encode(array('status' => true, 'massege' => 'ไม่พบข้อมูล ', 'respJSON' => $datas));
     
     }catch(PDOException $e){
         echo "Faild to connect to database" . $e->getMessage();

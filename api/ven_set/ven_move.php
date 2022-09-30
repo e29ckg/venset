@@ -33,15 +33,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $datas = array();
     // The request is using the POST method
     try{
-        $sql = "UPDATE ven SET ven_date =:ven_date WHERE id = :id";        
-                $query = $dbcon->prepare($sql);
-                $query->bindParam(':ven_date',$ven_date, PDO::PARAM_STR);
-                $query->bindParam(':id',$id, PDO::PARAM_INT);
-                $res = $query->execute();
 
+        $sql = "SELECT * FROM ven WHERE id = $id LIMIT 1 ";
+        $query = $dbcon->prepare($sql);
+        $query->execute();
+        $res_v = $query->fetch(PDO::FETCH_OBJ);
+
+        $user_id = $res_v->user_id;
+        $DN      = $res_v->DN;
+
+        $sql_VU = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date' AND status = 2 LIMIT 1";
+        $query_VU = $dbcon->prepare($sql_VU);
+        $query_VU->execute();
+        $res_VU = $query_VU->fetch(PDO::FETCH_OBJ);
+
+        if($res_VU){
             http_response_code(200);
-            echo json_encode(array('status' => true, 'message' => 'สำเร็จ', 'respJSON' => $res));
+            echo json_encode(array('status' => false, 'message' => 'วันนี้มีเวรอยู่แล้ว', 'respJSON' => $res_VU->user_id));
             exit;
+        }
+
+        if($DN =='กลางคืน'){
+            $ven_date_u1 = date("Y-m-d", strtotime('+1 day', strtotime($ven_date)));
+            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางวัน' AND status = 2 LIMIT 1";
+            $query = $dbcon->prepare($sql);
+            $query->execute();
+            $res = $query->fetch(PDO::FETCH_OBJ);
+
+            if($res){
+                http_response_code(200);
+                echo json_encode(array('status' => false, 'message' => 'วันพรุ่งนี้('.$ven_date_u1.')มีกลางวัน', 'respJSON' => $res));
+                exit;
+            }
+        }
+        if($DN =='กลางวัน'){
+            $ven_date_u1 = date("Y-m-d", strtotime('-1 day', strtotime($ven_date)));
+            $sql = "SELECT * FROM ven WHERE user_id = $user_id AND ven_date = '$ven_date_u1' AND DN='กลางคืน' AND status = 2 LIMIT 1";
+            $query = $dbcon->prepare($sql);
+            $query->execute();
+            $res = $query->fetch(PDO::FETCH_OBJ);
+
+            if($res){
+                http_response_code(200);
+                echo json_encode(array('status' => false, 'message' => 'วันที่('.$ven_date_u1.')มีเวรกลางคืน', 'respJSON' => $res));
+                exit;
+            }
+        }  
+
+
+        $sql = "UPDATE ven SET ven_date =:ven_date WHERE id = :id";        
+        $query = $dbcon->prepare($sql);
+        $query->bindParam(':ven_date',$ven_date, PDO::PARAM_STR);
+        $query->bindParam(':id',$id, PDO::PARAM_INT);
+        $res = $query->execute();
+
+        http_response_code(200);
+        echo json_encode(array('status' => true, 'message' => 'สำเร็จ', 'respJSON' => $res));
+        exit;
         
     
     }catch(PDOException $e){

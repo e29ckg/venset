@@ -117,19 +117,14 @@ https://templatemo.com/tm-559-zay-shop
                                     <td>name</td>
                                     <td></td>
                                 </tr>
-                                <tr>
-                                    <td>นายพเยาว์ สนพลายนายพเยาว์ สนพลาย</td>
-                                    <td><button class="btn btn-warning btn-sm">แก้ไข</button>
-                                        <button class="btn btn-danger btn-sm">ลบ</button></td>
-                                </tr>
-                                <tr>
-                                    <td>นายพเยาว์ สนพลาย</td>
+                                <tr v-for="j,index in just">
+                                    <td>{{j.fname}}{{j.name}} {{j.sname}}</td>
                                     <td><button class="btn btn-warning btn-sm">แก้ไข</button>
                                         <button class="btn btn-danger btn-sm">ลบ</button></td>
                                 </tr>
                             </table>                            
                             <div class="row mt-2">
-                                <button class="btn btn-success">เพิ่ม</button>
+                                <button class="btn btn-success" @click="show_add_user('ผู้พิพากษา','all')">เพิ่ม</button>
                             </div>
                         </div>
                     </div>
@@ -173,8 +168,7 @@ https://templatemo.com/tm-559-zay-shop
                    <div class="box">
                        <div class="box-header">
                            <h3 class="box-title"> เจ้าหน้าที่-กลางวัน</h3>
-                           <div class="box-tools pull-right">
-                              
+                           <div class="box-tools pull-right">                              
                         </div>	
                     </div>                    
                     <!-- /.box-header -->
@@ -245,36 +239,42 @@ https://templatemo.com/tm-559-zay-shop
     </section>
     <!-- End Section -->
 <!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ref="show_modal">
     Launch static backdrop modal
-</button> -->
+</button>
   
   <!-- Modal -->
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-md">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="reset_ven_com()"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="reset_modal()"></button>
         </div>
         <div class="modal-body">
             <form @submit="save_ven_com()">
                 <div class="row">
-                    <div class="col-1 form-check-inline">
-                        <label for="recipient-name" class="col-form-label">ชื่อ</label>
-                        <input type="text" class="form-control mt-1" >
-                    </div>
-                    <div class="col-2 form-check-inline">
-                        <!-- <label for="recipient-name" class="col-form-label">ผู้อยู่:</label> -->
-                        <select class="form-select mt-1" id="u_role" v-model="user_id"  required>
-                          <option v-for="d in datas" :value="d.user_id" >{{d.name}}</option>
-                        </select>
-                    </div>
-                    {{datas}}
+                    <table class="table">
+                        <thead>
+                            <th>#</th>
+                            <th>ชื่อ</th>
+                        </thead>
+                        <tbody>
+                            <tr v-for="d in datas">
+                                <td>
+                                    <input type="checkbox" :name="d.name" :id="d.user_id" v-model="d.ck" @change="ck_set(u_role,)" >
+                                    {{d.user_id}}
+                                </td>
+                                <td>{{d.name}}</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
                 </div>
+                {{datas}}
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="reset_ven_com()" ref="close_modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="reset_modal()" ref="close_modal">Close</button>
                     <button type="submit" class="btn btn-primary" @click.prevent="save_ven_com()">save</button>
                 </div>
         </form>

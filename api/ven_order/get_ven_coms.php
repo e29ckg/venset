@@ -51,12 +51,12 @@ $datas = array();
                     if($query->rowCount() > 0){
                         $ven_com = array();
                         foreach($model_ven_com_nums as $cm){
-                            $sql = "SELECT id FROM ven WHERE ven_com_id = :ven_com_id LIMIT 0,1"; 
-                            $query = $dbcon->prepare($sql);
-                            $query->bindParam(':ven_com_id',$model_num->id, PDO::PARAM_STR);
-                            $query->execute();
-                            // $model_ven_DIS = $query->fetchAll(PDO::FETCH_OBJ);
-                            if($query->rowCount() == 0){
+                            $sql = "SELECT id FROM ven WHERE ven_com_id = :ven_com_id LIMIT 1"; 
+                            $queryVen = $dbcon->prepare($sql);
+                            $queryVen->bindParam(':ven_com_id',$cm->id, PDO::PARAM_INT);
+                            $queryVen->execute();
+                            // $model_ven_DIS = $queryVen->fetchAll(PDO::FETCH_OBJ);
+                            if($queryVen->rowCount() == 0){
                                 $status_del = true;
                             }else{
                                 $status_del = false;

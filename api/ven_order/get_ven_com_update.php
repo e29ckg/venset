@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $datas = array();
     // The request is using the POST method
     try{
-        $sql = "SELECT * FROM ven_com WHERE ven_com_num =:ven_com_num  AND ven_month=:ven_month";
+        $sql = "SELECT * FROM ven_com WHERE ven_com_num =:ven_com_num  AND ven_month=:ven_month ORDER BY DN DESC, ven_time ASC";
         $query = $dbcon->prepare($sql);
         $query->bindParam(':ven_com_num'  ,$ven_com_num,  PDO::PARAM_STR);
         $query->bindParam(':ven_month' ,$ven_month, PDO::PARAM_STR);

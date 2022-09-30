@@ -1,3 +1,6 @@
+// const { info } = require("console");
+
+
 Vue.createApp({
   data() {
     return {
@@ -35,6 +38,7 @@ Vue.createApp({
     },
     profiles:[],
 
+<<<<<<< HEAD
     ven_com_id: '1663173990',
     ven_com_num: '1254',
     ven_com_date: '2022-09-28',
@@ -44,20 +48,53 @@ Vue.createApp({
     u_role    : 'จนท.2',
     ven_com_name    : 'ฟื้นฟู/ตรวจสอบการจับ/หมายจับ-ค้น',
     price    : '1500',
+=======
+    ven_coms  :[],
+    ven_coms_index:'',
+>>>>>>> 9f5683a43af0c42ce848bcf868c49c01a427fab6
 
-    isLoading: false,
+    ven_com_id: '',
+    ven_month : '',
+    DN        : '',
+    u_role    : '',
+    price     : '',
+
+    label_message : '<--กรุณาเลือกคำสั่ง',
+    isLoading : false,
   }
   },
   async mounted(){
     this.url_base = window.location.protocol + '//' + window.location.host;
     this.url_base_app = window.location.protocol + '//' + window.location.host + '/venset/';
+    // const d = 
+    this.ven_month = new Date();
     await this.get_vens()
-    this.get_profiles()
+    await this.get_ven_coms()
+    // this.get_profiles()
     
   },
   watch: {
     q(){
       this.ch_search_pro()
+    },
+    ven_coms_index(){
+      let i = this.ven_coms_index
+      if(this.ven_coms[i].id){
+        this.label_message = 
+        // this.ven_coms[i].id + ' -> ' 
+        this.ven_coms[i].u_role + ' -> ' 
+        + this.ven_coms[i].DN + ' -> ' 
+        + this.ven_coms[i].ven_month + ' -> ' 
+        + this.ven_coms[i].ven_com_name + ' -> ' 
+        + this.ven_coms[i].price ;
+
+        this.ven_com_id =this.ven_coms[i].id 
+        this.ven_month  =this.ven_coms[i].ven_month
+        this.u_role     =this.ven_coms[i].u_role
+        this.DN         =this.ven_coms[i].DN
+        
+        this.cal_render()
+      }
     }
   },
   methods: {
@@ -67,14 +104,14 @@ Vue.createApp({
       
       var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
-          locale: 'th',
-          events: this.datas,
-          // googleCalendarApiKey: 'AIzaSyDcnW6WejpTOCffshGDDb4neIrXVUA1EAE',
-          // events: 'en.usa#holiday@group.v.calendar.google.com',
+          initialDate: this.ven_month,
+          firstDay    : 1,
+          locale      : 'th',
+          events      : this.datas,
           eventClick: (info)=> {
               console.log(info.event.id +' '+info.event.title)
               console.log(info.event.extendedProps)
-              // this.cal_click(info)
+              this.cal_click(info.event.id)
           },
           dateClick:(date)=>{
               console.log(date)
@@ -88,11 +125,13 @@ Vue.createApp({
               // alert(info.event.id + info.event.title + " was dropped on " + info.event.start);
               // alert(info.event.title + " was dropped on " + info.event.start.toISOString());
 
-              if (!confirm("Are you sure about this change?")) {
+              // if (!confirm("Are you sure about this change?")) {
+              //     info.revert();
+              // }else{
+                if(!this.event_drop(info.event.id,info.event.start)){
                   info.revert();
-              }else{
-                this.event_drop(info.event.id,info.event.start)
-              }
+                }
+              // }
           },
           droppable: true,
           drop: (info)=> {
@@ -102,32 +141,73 @@ Vue.createApp({
               // is the "remove after drop" checkbox checked?
               // if (checkbox.checked) {
                   // if so, remove the element from the "Draggable Events" list
-                  info.draggedEl.parentNode.removeChild(info.draggedEl);
+                  // info.draggedEl.parentNode.removeChild(info.draggedEl);
               // }
               
           }
       });
       calendar.render(); 
   },
-  drop_insert(uid,dateStr){
-    axios.post(this.url_base_app + '/api/ven_set/ven_insert.php',{
-                        uid         : uid,
-                        ven_date    : dateStr,
-                        ven_time    : this.ven_time,
-                        DN          : this.DN,
-                        ven_month   : this.ven_month,
-                        ven_com_id  : this.ven_com_id
-                      })
+  sel_vem_com(){
+    this.get_profiles()
+  },
+  cal_click(id){
+    axios.post(this.url_base_app + '/api/ven_set/get_ven.php',{id:id})
         .then(response => {
-            console.log(response.data);
-            if (response.data.status) {
-              this.get_vens()
-            } 
-        })
-        .catch(function (error) {        
-            console.log(error);
-            
-        });
+          console.log(response.data);
+          if (response.data.status) {
+            this.data_event = response.data.respJSON[0]
+            this.$refs['show_modal'].click()
+
+          } else{
+            let icon    = 'warning'
+            let message = response.data.message                
+            this.alert(icon,message,0)
+
+          }
+      })
+      .catch(function (error) {        
+      console.log(error);
+
+    });
+
+  },
+  drop_insert(uid,dateStr){
+    if(this.ven_com_id){
+      axios.post(this.url_base_app + '/api/ven_set/ven_insert.php',{
+                          uid         : uid,
+                          ven_date    : dateStr,
+                          ven_com_id  : this.ven_com_id
+                        })
+          .then(response => {
+              console.log(response.data);
+              if (response.data.status) {
+                this.get_vens()
+                swal.fire({
+                  icon: 'success',
+                  title: response.data.message,
+                  showConfirmButton: true,
+                  timer: 1000
+                });
+              } else{
+                let icon    = 'warning'
+                let message = response.data.message                
+                this.alert(icon,message,0)
+                this.get_vens()
+                
+              }
+            })
+            .catch(function (error) {        
+              console.log(error);
+              
+            });
+    }else{
+      let icon    = 'warning'
+      let message = []
+      if(this.ven_com_id==''){message.push('กรุณาเลือกคำสั่ง')}            
+      this.alert(icon,message,0)
+      this.get_vens()
+    }
     
   }, 
   event_drop(id,start){
@@ -143,7 +223,13 @@ Vue.createApp({
               showConfirmButton: true,
               timer: 1000
             });
-        } 
+            return true
+        } else{
+          icon = 'warning'
+          message = response.data.message;
+          this.alert(icon,message,timer=0)
+          return false
+        }
     })
     .catch(function (error) {
         console.log(error);
@@ -156,6 +242,19 @@ Vue.createApp({
         if (response.data.status) {
             this.datas = response.data.respJSON;
             this.cal_render()
+            this.$refs['calendar'].focus()
+        } 
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  },
+  get_ven_coms(){
+    axios.get(this.url_base_app + './api/ven_set/get_ven_coms.php')
+    .then(response => {
+        console.log(response.data.respJSON);
+        if (response.data.status) {
+            this.ven_coms = response.data.respJSON;
         } 
     })
     .catch(function (error) {
@@ -167,23 +266,75 @@ Vue.createApp({
           .then(response => {
               console.log(response.data.respJSON);
               if (response.data.status) {
-                  pfs = response.data.respJSON;
-                  for (let i = 0; i < pfs.length; i++) {
-                      this.profiles.push({
-                          'id' : pfs[i].user_id,
-                          'uid' : pfs[i].user_id,
-                          'name' : pfs[i].name,
-                          'sname' : pfs[i].sname,
+                  // pfs = response.data.respJSON;
+                  this.profiles = response.data.respJSON;
+                  // for (let i = 0; i < pfs.length; i++) {
+                  //     this.profiles.push({
+                  //         'id' : pfs[i].user_id,
+                  //         'uid' : pfs[i].user_id,
+                  //         'name' : pfs[i].name,
+                  //         'sname' : pfs[i].sname,
                           
-                      })
-                  }
+                  //     })
+                  // }
               } 
           })
           .catch(function (error) {
               console.log(error);
           });
-  },                
-  
+  },
+  set_ven_com(){
+    let i = this.ven_coms_index
+    this.ven_com_id = this.ven_coms[i].id
+    this.ven_month = this.ven_coms[i].ven_month
+    this.DN = this.ven_coms[i].DN
+    this.u_role = this.ven_coms[i].u_role
+    this.ven_com_name = this.ven_coms[i].ven_com_name
+    this.price = this.ven_coms[i].price
+  },
+  ven_del(id){
+    Swal.fire({
+      title: 'Are you sure?',
+      text  : "You won't be able to revert this!",
+      icon  : 'warning',
+      showCancelButton  : true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor : '#d33',
+      confirmButtonText : 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        axios.post(this.url_base_app + './api/ven_set/ven_del.php',{id:id})
+          .then(response => {
+              console.log(response.data.respJSON);
+              if (response.data.status) {
+                icon = "success";
+                message = response.data.message;
+                this.alert(icon,message,1000)
+                this.$refs['close_modal'].click()
+                this.get_vens()
+              }else{
+                icon = "warning";
+                message = response.data.message;
+                this.alert(icon,message,0)
+              } 
+          })
+          .catch(function (error) {
+              console.log(error);
+          });
+      }
+    })
+
+    
+  },   
+
+  alert(icon,message,timer=0){
+    swal.fire({
+    icon: icon,
+    title: message,
+    showConfirmButton: true,
+    timer: timer
+  });
+  },
   
   reset_search(){
     this.q = ''

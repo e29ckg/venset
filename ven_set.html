@@ -60,19 +60,31 @@
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
+    font-size: 15px;
   }
 
   #external-events {
     position: fixed;
     /* position: relative; */
     z-index: 2;
-    top: 20px;
+    top: 10px;
     left: 20px;
-    width: 150px;
+    width: 185px;
     padding: 0 10px;
     border: 1px solid rgb(236, 40, 40);
     background: rgb(144, 212, 18);
+  }
+
+  #external-events2 {
+    position: fixed;
+    font-size: 18px;
+    z-index: 2;
+    top: 10px;
+    left: 220px;
+    width: 800px;
+    padding: 0 10px;
+    border: 1px solid rgb(236, 40, 40);
+    background: rgb(178, 206, 233);
   }
 
   .demo-topbar + #external-events { /* will get stripped out */
@@ -88,8 +100,14 @@
     position: relative;
     z-index: 1;
     margin-left: 200px;
+    margin-top: 50px;
   }
-
+  
+  #vc {
+    position: relative;
+    z-index: 3;
+    margin-left: 200px;
+  }
   #calendar {
     max-width: 1100px;
     margin: 20px auto;
@@ -99,34 +117,94 @@
 </head>
 <body>
 <div id="venSet">
-  
+  <div id='external-events2'>
+    {{label_message}}
+  </div>
   <div id='external-events'>
+    <form >
+      <select class="form-select mt-1 co-10" id="u_role" v-model="ven_coms_index" placeholder="กรุณาเลือกคำสั่ง / หน้าที่" @change="sel_vem_com()">
+        <option v-for="vc,index in ven_coms" :value="index" >{{vc.u_role}} -> {{vc.DN}} -> {{vc.ven_com_name}} -> {{vc.ven_com_num}} ->  {{vc.price}} </option>
+      </select>
+
+    </form>
     <p>
-      <strong>คำสั่งที่ {{ven_com_num}}</strong>
-      <br>ผู้พิพากษา<br>
-      หมายจับ-หมายค้น แขวง
+      <strong>{{ven_com_id}}</strong>
+      
     </p>
     
     <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event' v-for="pf,index in profiles" :data-event="pf.data_event" :data-uid="pf.uid">
-      <div class='fc-event-main'>{{index + 1}} {{pf.name}} {{pf.uid}}</div>
+      <div class='fc-event-main'>{{index + 1}} {{pf.name}}</div>
     </div>
     
 
     <p>
-      <input type='checkbox' id='drop-remove' />
-      <label for='drop-remove'>remove after drop</label>
+      <!-- <input type='checkbox' id='drop-remove' />
+      <label for='drop-remove'>remove after drop</label> -->
     </p>
   </div>
-
+  <!-- <div class="row" id='vc'>
+    <label for="recipient-name" class="col-form-label">เลือกคำสั่ง:</label>
+    <form >
+      <select class="form-select mt-1 co-10" id="u_role" v-model="ven_coms_index" placeholder="กรุณาเลือกคำสั่ง / หน้าที่" >
+        <option v-for="vc,index in ven_coms" :value="index" >({{vc.id}}) {{vc.ven_com_num}} -> {{vc.ven_com_date}} -> {{vc.ven_time}} -> {{vc.u_role}} -> {{vc.DN}} -> {{vc.ven_com_name}} -> {{vc.price}} </option>
+      </select>
+    </form>
+  </div> -->
   <div id='calendar-container'>
-    <div>
-      <button class="btn btn-primary">เลือกคำสั่ง</button> 
-        {{ven_com_date}} {{ven_month}} {{ven_time}} {{DN}} {{u_role}} {{ven_com_name}} {{price}}
-    </div>
-    <div id='calendar' ref="calendar"></div>
+     <div id='calendar' ref="calendar"></div>
   </div>
-  {{datas}}
-  {{profiles}}
+  <!-- {{datas}} -->
+  <!-- {{profiles}} -->
+
+  <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" ref="show_modal" hidden>
+    Launch static backdrop modal
+</button>
+  <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ref="close_modal"></button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <table class="table table-bordered">
+              <!-- <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col"></th>
+                </tr>
+              </thead> -->
+              <tbody>
+                <tr>
+                  <th scope="row">id</th>
+                  <td>{{data_event.id}}</td>
+                </tr>
+                <tr>
+                  <th scope="row">วันที่ เวลา</th>
+                  <td>{{data_event.ven_date}} เวลา {{data_event.ven_time}} น.</td>
+                </tr>
+                <tr>
+                  <th scope="row">เวร</th>
+                  <td>{{data_event.DN}}</td>
+                </tr>
+                <tr>
+                  <th scope="row">ชื่อผู้อยู่</th>
+                  <td>{{data_event.fname}}{{data_event.name}} {{data_event.sname}}</td>
+                </tr>
+                
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <button @click="ven_del(data_event.id)" class="btn btn-danger">ลบ</button>
+          </div>
+        </div>
+      <!-- {{data_event}} -->
+    </div>
+  </div>
 </div>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
