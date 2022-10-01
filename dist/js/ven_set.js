@@ -69,11 +69,11 @@ Vue.createApp({
       let i = this.ven_coms_index
       if(this.ven_coms[i].id){
         this.label_message = 
-        // this.ven_coms[i].id + ' -> ' 
-        this.ven_coms[i].u_role + ' -> ' 
-        + this.ven_coms[i].DN + ' -> ' 
-        + this.ven_coms[i].ven_month + ' -> ' 
-        + this.ven_coms[i].ven_com_name + ' -> ' 
+        // this.ven_coms[i].id + ' | ' 
+        '' + this.ven_coms[i].u_role + ' | ' 
+        + this.ven_coms[i].DN + ' | ' 
+        + this.ven_coms[i].ven_month + ' | ' 
+        + this.ven_coms[i].ven_com_name + ' | ' 
         + this.ven_coms[i].price ;
 
         this.ven_com_id =this.ven_coms[i].id 
@@ -87,7 +87,6 @@ Vue.createApp({
   },
   methods: {
     cal_render(){
-      // var calendarEl = document.getElementById('calendar');
       var calendarEl = this.$refs['calendar'];
       
       var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -109,29 +108,13 @@ Vue.createApp({
           editable: true,
           eventDrop: (info)=> {
               console.log(info.event)
-
-              // alert(info.event.id + info.event.title + " was dropped on " + info.event.start);
-              // alert(info.event.title + " was dropped on " + info.event.start.toISOString());
-
-              // if (!confirm("Are you sure about this change?")) {
-              //     info.revert();
-              // }else{
                 if(!this.event_drop(info.event.id,info.event.start)){
                   info.revert();
                 }
-              // }
           },
           droppable: true,
           drop: (info)=> {
-              // console.log(info.draggedEl.dataset.uid,info.dateStr)
-              this.drop_insert(info.draggedEl.dataset.uid,info.dateStr)                            
-              // info.revert();
-              // is the "remove after drop" checkbox checked?
-              // if (checkbox.checked) {
-                  // if so, remove the element from the "Draggable Events" list
-                  // info.draggedEl.parentNode.removeChild(info.draggedEl);
-              // }
-              
+              this.drop_insert(info.draggedEl.dataset.uid,info.dateStr)  
           }
       });
       calendar.render(); 
@@ -327,6 +310,9 @@ Vue.createApp({
       }
     })
     
+  },
+  close_m(){
+    this.get_vens()
   },   
 
   alert(icon,message,timer=0){
