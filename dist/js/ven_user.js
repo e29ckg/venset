@@ -77,8 +77,7 @@ Vue.createApp({
             .then(response => {
                 console.log(response.data.respJSON);
                 if (response.data.status) {
-                    this.datas = response.data.respJSON;
-                    
+                    this.datas = response.data.respJSON;                    
                 } 
             })
             .catch(function (error) {
