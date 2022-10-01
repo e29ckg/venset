@@ -6,7 +6,7 @@
 
 
   <title>
-    Drag-n-drop external events - Demos | FullCalendar
+    ven-set
   </title>
 
 
@@ -72,9 +72,12 @@
     top: 10px;
     left: 15px;
     width: 175px;
+    height: 100%;
     padding: 0 10px;
     border: 1px solid rgb(236, 40, 40);
     background: rgb(144, 212, 18);
+    overflow-y: auto;
+    /* overflow-y: scroll; */
   }
 
   #external-events2 {
@@ -126,6 +129,7 @@
     <form >
       <select class="form-select mt-1 co-10" id="u_role" v-model="ven_coms_index" placeholder="กรุณาเลือกคำสั่ง / หน้าที่" @change="sel_vem_com(ven_coms_index)">
         <option v-for="vc,index in ven_coms" :value="index" >{{vc.u_role}} -> {{vc.DN}} -> {{vc.ven_com_name}} -> {{vc.ven_com_num}} ->  {{vc.price}} </option>
+        
       </select>
 
     </form>
@@ -137,6 +141,10 @@
     <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event' v-for="pf,index in profiles" :data-event="pf.data_event" :data-uid="pf.uid">
       <div class='fc-event-main'>{{index + 1}} {{pf.name}}</div>
     </div>    
+    <!-- <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event' v-for="index in 50">
+      <div class='fc-event-main'>{{index}}</div>
+    </div>     -->
+    
 
     <p>
       <!-- <input type='checkbox' id='drop-remove' />
@@ -167,7 +175,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ref="close_modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ref="close_modal" @click="close_m()"></button>
         </div>
         <div class="modal-body">
           <div>
