@@ -28,7 +28,7 @@ $datas = array();
         if($u_role == 'ผู้พิพากษา'){
             $sql = "SELECT user_id, fname, name, sname, dep, st FROM profile WHERE dep LIKE 'ผู้พิพากษา%' AND status = 10 ORDER BY st ASC";
         }elseif($u_role == 'ผอ./แทน'){
-            $sql = "SELECT user_id, fname, name, sname, dep, st FROM profile WHERE dep LIKE 'ผู้อำนวยการ%' AND dep LIKE '%พิเศษ' AND status = 10 ORDER BY st ASC";
+            $sql = "SELECT user_id, fname, name, sname, dep, st FROM profile WHERE dep LIKE 'ผู้อำนวยการ%' OR dep LIKE '%พิเศษ' AND status = 10 ORDER BY st ASC";
         }else{
             $sql = "SELECT user_id, fname, name, sname, dep, st FROM profile WHERE dep NOT LIKE '%พิเศษ' AND dep NOT LIKE 'ผู้พิพากษา%' AND status = 10 ORDER BY st ASC";
         }
@@ -50,9 +50,10 @@ $datas = array();
             echo json_encode(array('status' => true, 'massege' => 'สำเร็จ', 'respJSON' => $datas,'$u_role '=>$u_role));
             exit;
         }
-     
         http_response_code(200);
-        echo json_encode(array('false' => true, 'massege' => 'ไม่พบข้อมูล '));
+        echo json_encode(array('false' => true, 'massege' => 'ไม่พบข้อมูล','respJSON' => $datas));
+    
+     
     
     }catch(PDOException $e){
         echo "Faild to connect to database" . $e->getMessage();
