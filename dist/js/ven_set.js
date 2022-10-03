@@ -1,6 +1,7 @@
 // const { info } = require("console");
 
 
+
 Vue.createApp({
   data() {
     return {
@@ -90,9 +91,10 @@ Vue.createApp({
       var calendarEl = this.$refs['calendar'];
       
       var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-          initialDate: this.ven_month,
+          initialView : 'dayGridMonth',
+          initialDate : this.ven_month,
           firstDay    : 1,
+          height      : 1200,
           locale      : 'th',
           events      : this.datas,
           eventClick: (info)=> {
