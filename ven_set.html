@@ -106,6 +106,7 @@
     z-index: 1;
     margin-left: 200px;
     margin-top: 50px;
+    width:auto;
   }
   
   #vc {
@@ -116,6 +117,7 @@
   #calendar {
     max-width: 1100px;
     margin: 20px auto;
+    height: auto;
   }
 
 </style>
@@ -207,8 +209,14 @@
               </tbody>
             </table>
           </div>
-          <div>
-            <button @click="ven_del(data_event.id)" class="btn btn-danger">ลบ</button>
+          <div class="row">
+            <div>
+              <button @click="ven_del(data_event.id)" class="btn btn-danger">ลบ</button>
+            </div>
+            <div class="float-right">
+              <button type="button" class="btn btn-success float-right" data-bs-dismiss="modal" aria-label="Close" ref="close_modal" @click="close_m()">ยกเลิก</button>
+            </div>
+
           </div>
         </div>
       <!-- {{data_event}} -->
