@@ -42,11 +42,13 @@ Vue.createApp({
     ven_coms  :[],
     ven_coms_index:'',
 
-    ven_com_id: '',
-    ven_month : '',
-    DN        : '',
-    u_role    : '',
-    price     : '',
+    ven_com_id  : '',
+    ven_month   : '',
+    ven_com_name : '',
+    ven_com_num : '',
+    DN          : '',
+    u_role      : '',
+    price       : '',
 
     label_message : '<--กรุณาเลือกคำสั่ง',
     isLoading : false,
@@ -75,10 +77,13 @@ Vue.createApp({
         + this.ven_coms[i].DN + ' | ' 
         + this.ven_coms[i].ven_month + ' | ' 
         + this.ven_coms[i].ven_com_name + ' | ' 
+        + this.ven_coms[i].ven_com_num + ' | ' 
         + this.ven_coms[i].price ;
 
         this.ven_com_id =this.ven_coms[i].id 
         this.ven_month  =this.ven_coms[i].ven_month
+        this.ven_com_name  =this.ven_coms[i].ven_com_name
+        this.ven_com_num  =this.ven_coms[i].ven_com_num
         this.u_role     =this.ven_coms[i].u_role
         this.DN         =this.ven_coms[i].DN
         

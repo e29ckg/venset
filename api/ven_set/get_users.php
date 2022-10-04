@@ -28,7 +28,7 @@ $datas = array();
         if($u_role == 'ผู้พิพากษา'){
             $sql = "SELECT user_id, fname, name, sname, dep, st FROM profile WHERE dep LIKE 'ผู้พิพากษา%' AND status = 10 ORDER BY st ASC";
         }elseif($u_role == 'ผอ./แทน'){
-            $sql = "SELECT user_id, fname, name, sname, dep, st FROM profile WHERE dep LIKE 'ผู้อำนวยการ%' OR dep LIKE '%พิเศษ' AND status = 10 ORDER BY st ASC";
+            $sql = "SELECT user_id, fname, name, sname, dep, st FROM profile WHERE ( dep LIKE 'ผู้อำนวยกา%' OR dep LIKE '%พิเศษ' ) AND status = 10 ORDER BY st ASC";
         }else{
             $sql = "SELECT user_id, fname, name, sname, dep, st FROM profile WHERE dep NOT LIKE '%พิเศษ' AND dep NOT LIKE 'ผู้พิพากษา%' AND status = 10 ORDER BY st ASC";
         }
