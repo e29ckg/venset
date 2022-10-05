@@ -21,7 +21,7 @@ $datas = array();
         FROM ven as v 
         INNER JOIN `profile` as p ON v.user_id = p.user_id
         INNER JOIN `ven_com` as vc ON vc.id = v.ven_com_id
-        WHERE v.id = $id  AND p.`status` = 10
+        WHERE v.id = $id 
         ORDER BY v.ven_date DESC
         LIMIT 1";
         $query = $dbcon->prepare($sql);
