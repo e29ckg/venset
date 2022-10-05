@@ -17,7 +17,8 @@ $datas = array();
 
     // The request is using the POST method
     try{
-        $sql = "SELECT v.*, p.fname, p.name, p.sname FROM ven as v 
+        $sql = "SELECT v.*, p.fname, p.name, p.sname, vc.u_role, vc.ven_com_num, vc.ven_com_name, vc.price 
+        FROM ven as v 
         INNER JOIN `profile` as p ON v.user_id = p.user_id
         INNER JOIN `ven_com` as vc ON vc.id = v.ven_com_id
         WHERE v.id = $id  AND p.`status` = 10
